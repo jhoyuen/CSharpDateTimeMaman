@@ -23,3 +23,8 @@ private static int GetCorrectAge(DateTime dateOfBirth, DateTime today, int age)
     return age;
 }
 ```
+
+## JDM-3: Calculate the number of days between a start and end date
+```
+public static int CountDaysBetweenDates(this DateOnly startDate, DateOnly endDate) => Math.Abs(endDate.DayNumber - startDate.DayNumber);
+```
