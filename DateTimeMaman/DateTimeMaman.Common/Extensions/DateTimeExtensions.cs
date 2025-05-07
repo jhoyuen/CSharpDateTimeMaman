@@ -20,4 +20,6 @@ public static class DateTimeExtensions
 
         return age;
     }
+
+    public static int CountDaysBetweenDates(this DateOnly startDate, DateOnly endDate) => Math.Abs(endDate.DayNumber - startDate.DayNumber);
 }

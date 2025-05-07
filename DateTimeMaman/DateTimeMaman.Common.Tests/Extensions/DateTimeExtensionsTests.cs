@@ -39,4 +39,20 @@ public class DateTimeExtensionsTests
     }
 
     #endregion
+
+    [Theory]
+    [InlineData(12, 5, 2025)]
+    [InlineData(2, 5, 2025)]
+    public void CountDaysBetweenDates_ShouldReturnValidNumberOfDays(int day, int month, int year)
+    {
+        // Arrange
+        var startDate = new DateOnly(2025, 5, 7);
+        var endDate = new DateOnly(year, month, day);
+
+        // Act
+        var days = startDate.CountDaysBetweenDates(endDate);
+        
+        // Assert
+        Assert.Equal(5, days);
+    }
 }
