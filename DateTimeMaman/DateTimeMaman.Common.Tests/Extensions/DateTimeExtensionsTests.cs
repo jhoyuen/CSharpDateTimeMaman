@@ -40,6 +40,8 @@ public class DateTimeExtensionsTests
 
     #endregion
 
+    #region CountDaysBetweenDates
+
     [Theory]
     [InlineData(12, 5, 2025)]
     [InlineData(2, 5, 2025)]
@@ -51,8 +53,57 @@ public class DateTimeExtensionsTests
 
         // Act
         var days = startDate.CountDaysBetweenDates(endDate);
-        
+
         // Assert
         Assert.Equal(5, days);
     }
+
+    #endregion
+
+    #region FromLocalToSpecificCountryDateTime
+
+    [Theory]
+    [InlineData("MU", 1, 8)]
+    [InlineData("GB", 22, 7)]
+    [InlineData("US", 17, 7)]
+    public void FromLocalToSpecificCountryDateTime_ShouldReturnValidDateTime(string countryCode, int hourInTimeZone, int dateInTimeZone)
+    {
+        // Arrange
+        var dateTime = new DateTime(2025, 5, 8, 7, 17, 0);
+
+        // Act
+        var result = dateTime.FromLocalToSpecificCountryDateTime(countryCode);
+
+        // Assert
+        Assert.Equal(dateTime.Kind, result.Kind);
+        Assert.Equal(hourInTimeZone, result.Hour);
+        Assert.Equal(dateInTimeZone, result.Day);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("   ")]
+    public void FromLocalToSpecificCountryDateTime_WhenCountryCodeIsNullOrWhitespace_ShouldThrowArgumentException(string countryCode)
+    {
+        // Arrange
+        var dateTime = new DateTime(2025, 5, 8, 7, 17, 0);
+
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => dateTime.FromLocalToSpecificCountryDateTime(countryCode));
+    }
+
+    [Theory]
+    [InlineData("ZZ")]
+    [InlineData("just a test")]
+    public void FromLocalToSpecificCountryDateTime_WhenCountryCodeNotFound_ShouldThrowArgumentException(string invalidCountryCode)
+    {
+        // Arrange
+        var dateTime = new DateTime(2025, 5, 8, 7, 17, 0);
+
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => dateTime.FromLocalToSpecificCountryDateTime(invalidCountryCode));
+    }
+
+    #endregion
 }
