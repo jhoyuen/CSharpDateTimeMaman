@@ -22,4 +22,20 @@ public static class DateTimeExtensions
     }
 
     public static int CountDaysBetweenDates(this DateOnly startDate, DateOnly endDate) => Math.Abs(endDate.DayNumber - startDate.DayNumber);
+
+    public static DateTime FromLocalToSpecificCountryDateTime(this DateTime dateTime, string countryCode)
+    {
+        if (string.IsNullOrWhiteSpace(countryCode))
+            throw new ArgumentException("Country code must be provided.");
+
+        var upperCode = countryCode.Trim().ToUpperInvariant();
+
+        if (!Constants.CountryTimeZones.TryGetValue(upperCode, out var timezoneId))
+            throw new ArgumentException($"Time zone for country code '{countryCode}' not found.");
+
+        var utcDateTime = dateTime.ToUniversalTime();
+        var tzInfo = TimeZoneInfo.FindSystemTimeZoneById(timezoneId);
+
+        return TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, tzInfo);
+    }
 }
